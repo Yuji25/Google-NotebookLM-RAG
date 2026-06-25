@@ -53,12 +53,13 @@ export const queryDocument = async (req, res) => {
 
     console.log(`Received query: ${query} for collection: ${collectionName}`);
 
-    const answer = await generateAnswer(query, collectionName);
+    const { answer, trace } = await generateAnswer(query, collectionName);
 
     res.status(200).json({
       success: true,
       query: query,
       answer: answer,
+      trace: trace || [],
     });
   } catch (error) {
     console.error("Error in queryDocument:", error);

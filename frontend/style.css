@@ -640,3 +640,46 @@ body {
   .chat-messages { padding: 16px 12px; }
   .chat-input-wrapper { padding: 10px 12px 14px; }
 }
+
+
+/* ---------- Corrective RAG trace (collapsible under AI answers) ---------- */
+.rag-trace {
+  margin-top: 10px;
+  border-top: 1px dashed var(--glass-border);
+  padding-top: 8px;
+  font-size: 0.8rem;
+}
+
+.rag-trace summary {
+  cursor: pointer;
+  color: var(--accent);
+  font-weight: 600;
+  list-style: none;
+  user-select: none;
+  opacity: 0.85;
+}
+
+.rag-trace summary:hover { opacity: 1; }
+
+.rag-trace[open] summary { margin-bottom: 6px; }
+
+.trace-step {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  padding: 3px 0;
+  color: var(--text-secondary);
+  line-height: 1.35;
+}
+
+.trace-tag {
+  flex-shrink: 0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 6px;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  color: var(--accent);
+  white-space: nowrap;
+}

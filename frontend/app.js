@@ -186,11 +186,27 @@ function renderMessages(nb) {
     return;
   }
 
-  nb.messages.forEach((msg) => appendMessageDOM(msg.role, msg.content, false));
+  nb.messages.forEach((msg) => appendMessageDOM(msg.role, msg.content, false, msg.trace));
   scrollToBottom();
 }
 
-function appendMessageDOM(role, content, animate = true) {
+function renderTrace(trace) {
+  if (!trace || !trace.length) return "";
+  const steps = trace
+    .map(
+      (t) =>
+        `<div class="trace-step"><span class="trace-tag">${escapeHTML(t.step)}</span>${escapeHTML(t.detail)}</div>`
+    )
+    .join("");
+  return `
+    <details class="rag-trace">
+      <summary>🔍 Corrective RAG trace (${trace.length} steps)</summary>
+      ${steps}
+    </details>
+  `;
+}
+
+function appendMessageDOM(role, content, animate = true, trace = null) {
   const welcome = chatMessages.querySelector(".welcome-screen");
   if (welcome) welcome.remove();
 
@@ -201,7 +217,7 @@ function appendMessageDOM(role, content, animate = true) {
   const avatarText = role === "user" ? "U" : "✦";
   row.innerHTML = `
     <div class="avatar">${avatarText}</div>
-    <div class="bubble">${escapeHTML(content)}</div>
+    <div class="bubble">${escapeHTML(content)}${role === "ai" ? renderTrace(trace) : ""}</div>
   `;
 
   chatMessages.appendChild(row);
@@ -283,8 +299,8 @@ chatForm.addEventListener("submit", async (e) => {
     }
 
     const answer = data.answer || "I could not find an answer in the document.";
-    nb.messages.push({ role: "ai", content: answer });
-    appendMessageDOM("ai", answer);
+    nb.messages.push({ role: "ai", content: answer, trace: data.trace });
+    appendMessageDOM("ai", answer, true, data.trace);
   } catch (err) {
     removeThinkingDots();
     const errMsg = `Error: ${err.message}`;
